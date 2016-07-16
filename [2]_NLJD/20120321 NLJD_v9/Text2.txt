@@ -1,0 +1,8 @@
+using system.Data;
+using system.Data.OleDb
+ string strc;
+ strconnection+=@"data source=C:\Documents and Settings\æÁºÆ√∂\πŸ≈¡ »≠∏È\knn\shijian.xls"
+ OleDbConnection objc OleDbconnection (strconnection);
+
+ objconnection.open();
+ objconnecton.close();

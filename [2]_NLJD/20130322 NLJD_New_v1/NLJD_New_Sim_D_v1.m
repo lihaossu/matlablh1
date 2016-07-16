@@ -1,0 +1,103 @@
+clear all; close all; clc
+
+%% Initialize
+% Number of Measurement Data
+N = 11;
+% Number of Frame
+F = 100;
+% Deviation of Measurement
+D = [10:10:100];
+% Deviation of Real Data
+R = 100;
+
+% Dummy
+NLJD = zeros(F,1);
+NLJD_Fuzzy = zeros(F,1);
+Detection = zeros(F,1);
+Err_Acc = zeros(length(N),1);
+
+%% Simulation Part
+progressbar;
+
+for idx_Simulation = 1:length(D)
+    
+    for idx_F = 1:F
+        Real_Data = ceil(R*rand(1,2)+[499 501]);
+        
+        if Real_Data(1) >= Real_Data(2)
+            % Device
+            NLJD = 0;
+            % Metal
+        else NLJD = 1;
+        end;
+        
+        for idx_N = 1:N
+            Measurement_Data(idx_N,:) = ceil(D(idx_Simulation)*randn(1,2)+Real_Data);
+        end;
+        
+       % Fuzzy Center
+        [center,U,objFcn] = fcm_1(Measurement_Data,3);
+        maxU = max(U);
+        index1 = find(U(1,:) == maxU);
+        index2 = find(U(2,:) == maxU);
+        index3 = find(U(3,:) == maxU);
+        %
+        % if length(index1) > length(index2)
+        %     Fuzzy_Center = center(1,1:2);
+        % else Fuzzy_Center = center(2,1:2);
+        % end;
+        
+        aaa = [length(index1) length(index2) length(index3)];
+        
+        [value,position] = sort(aaa);
+        
+        Fuzzy_center = ceil((center(position(3),1:2) + center(position(2),1:2))/2);
+        
+        if Fuzzy_center(1) >= Fuzzy_center(2)
+            % Device
+            NLJD_Fuzzy_Center = 0;
+            % Metal
+        else NLJD_Fuzzy_Center = 1;
+        end;
+                
+    
+        
+        % Averaging
+        Averaging = ceil(sum(Measurement_Data)/N);
+        if Averaging(1) >= Averaging(2)
+            % Device
+            NLJD_Averaging = 0;
+            % Metal
+        else NLJD_Averaging = 1;
+        end;
+        
+        % Detection
+        Detection1(idx_F) = xor(NLJD,NLJD_Fuzzy_Center);
+       
+        Detection3(idx_F) = xor(NLJD,NLJD_Averaging);
+        
+        % Progressbar Count
+        progress_count = idx_F/F;
+        % Do something important
+        pause(0.01)
+        % Update figure
+        progressbar(((idx_Simulation-1)+progress_count)/(length(D)));
+        
+    end;
+    
+    Err_Acc1(idx_Simulation) = sum(Detection1);
+%     Err_Acc2(idx_Simulation) = sum(Detection2);
+    Err_Acc3(idx_Simulation) = sum(Detection3);
+    
+end;
+
+Fuzzy_Result = Err_Acc1/F*100;
+Averaging_Result = Err_Acc3/F*100;
+
+Error = [Averaging_Result' Fuzzy_Result'];
+bar(D,Error)
+
+xlabel('Deviation');
+ylabel('Classification Error Probability (%)');
+grid on
+legend('Averaging','Fuzzy Center');

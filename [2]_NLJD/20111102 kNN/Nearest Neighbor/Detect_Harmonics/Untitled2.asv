@@ -1,0 +1,54 @@
+%%
+x = 0 : .01 : 5*pi;
+y = 5 * sawtooth(x);
+subplot(311), plot(x, y)
+axis([min(x) max(x) min(y)-.5 max(y)+.5])
+xlabel('Sawtooth wave')
+
+n = 1 : 7;
+v = 10 ./(n*pi);
+subplot(312), stem(n, v)
+axis([min(n)-1 max(n)+1 0 max(v)+.5])
+xlabel('First harmonics')
+
+%%
+clear, clc, close all
+
+x = 0 : .01 : 5*pi;
+y = sawtooth(x);
+subplot(211), plot(x, y)
+axis([min(x) max(x) min(y)-.5 max(y)+.5])
+xlabel('Sawtooth wave')
+
+n = 1 : 7;
+v = 2 ./(n*pi);
+subplot(212), stem(n, v)
+axis([min(n)-1 max(n)+1 0 max(v)+.5])
+xlabel('First harmonics')
+
+
+figure
+y = square(x);
+subplot(211), plot(x, y)
+axis([min(x) max(x) min(y)-.5 max(y)+.5])
+xlabel('Square wave')
+
+n = 1 : 2 : 7;
+v = 4 ./(n*pi);
+subplot(212), stem(n, v)
+axis([min(n)-1 max(n)+1 0 max(v)+.5])
+xlabel('First harmonics')
+
+
+figure
+y = abs(sin(x));
+subplot(211), plot(x, y)
+axis([min(x) max(x) min(y)-.5 max(y)+.5])
+xlabel('Full-wave rectified sine')
+
+n = 1 : 7;
+v = 4 ./(pi*(4*n.^2 - 1));
+subplot(212), stem(n, v)
+axis([min(n)-1 max(n)+1 0 max(v)+.5])
+xlabel('First harmonics')
+

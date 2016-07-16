@@ -1,0 +1,11 @@
+READ.ME
+
+Forrest Sheng Bao <http://forrest.bao.googlepages.com>
+
+Tested on Ubuntu Linux 6.10 with MATLAB R2006b for Linux.
+
+To run this program, go to the directory where you store these MATLAB scripts. And then type "flavia" in MATLAB command prompt. Instructions will be available in the MATLAB shell and a pop-up window. 
+
+To fully implement the side-by-side display of your image and the standard leaf, you should also download standard leaf images(standardleaves.tar.gz) and extract them into a folder named "standardleaves" in the directory where you put those MATLAB scripts. On Linux, you can put the standardleaves.tar.gz in the directory where those MATLAB scripts locate and just type "tar zxfv standardleaves.tar.gz".
+
+If you have any problem or question, please refer to this page to access me: http://forrest.bao.googlepages.com/contact

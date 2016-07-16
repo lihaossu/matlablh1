@@ -1,0 +1,165 @@
+clear all; close all; clc;
+
+%% Initialization
+Fc = 2.5e6;         % Carrier frequency (Hz)
+Rsym = 1e6;         % Symbol rate (symbols/second)
+nSamps = 8;         % Number of samples per symbol
+frameLength = 2048; % Number of symbols in a frame
+M = 2;              % Modulation order (16-QAM)
+EbNo = 30;          % Ratio of baseband bit energy
+                    % to noise power spectral density (dB)
+% Calculate sampling frequency in Hz
+Fs = Rsym * nSamps;
+
+% Calculate passband SNR in dB. The noise variance of the baseband signal
+% is double that of the corresponding bandpass signal [1]. Increase the SNR
+% value by 10*log10(2) dB to account for this difference and have
+% equivalent baseband and passband performance.
+SNR = EbNo + 10*log10(log2(M)/nSamps) + 10*log10(2);
+
+%% Initialize Measurement Tools
+% Create a Welch spectrum estimator.
+specScope = spectrum.welch('Hamming',512);
+
+% Create a spectrum estimator options object to configure the spectrum
+% estimator.
+specOpts=psdopts(specScope);
+set(specOpts, 'Fs', Fs, 'SpectrumType','twosided','CenterDC',true);
+
+% Create a scatter plot scope for received symbols.
+scatScope = commscope.ScatterPlot('SamplingFrequency', Rsym, ...
+  'SamplesPerSymbol', 1); close(scatScope)
+
+%% Baseband Modulation
+% Create a M-QAM modulator.
+hMod = modem.qammod('M',M);
+
+% Set the expected constellation of the scatter plot scope.
+scatScope.Constellation = hMod.Constellation;
+scatScope.PlotSettings.Constellation = 'on';
+scatScope.PlotSettings.ConstellationStyle = '*r';
+
+% Generate random data symbols.
+b = randi([0 hMod.M-1], frameLength, 1);
+
+% Modulate the random data.
+txSym = modulate(hMod, b);
+
+%% Pulse Shaping
+% Specify a square root raised cosine filter with a filter length of eight
+% symbols and a rolloff factor of 0.2.
+nSym = 8;       % Length of the filter in symbols
+beta = 0.2;     % Rolloff factor
+filterSpec = fdesign.pulseshaping(nSamps, 'Square root raised cosine', ...
+  'Nsym,Beta', nSym, beta);
+
+% Design the transmitter filter.
+hXmtFlt = design(filterSpec);
+
+% Apply pulse shaping by upsampling and filtering.  Alternatively, you can
+% use an efficient multirate filter. See help for fdesign.interpolator for
+% more information.
+x = filter(hXmtFlt, upsample(txSym, nSamps));
+
+% Estimate spectrum of pulse shaped signal.
+psdProbe = psd(specScope, x, specOpts);
+plot(psdProbe)
+title('Tx Second Harmonics @ Tx')
+legend('Signal','Location','northeast')
+axis([-1.5 1.5 -130 -60]);
+%% Frequency Upconversion
+% Generate carrier. The sqrt(2) factor ensures that the power of the
+% frequency upconverted signal is equal to the power of its baseband
+% counterpart.
+t = (0:1/Fs:(frameLength/Rsym)-1/Fs).';
+carrier = sqrt(2)*exp(1i*2*pi*Fc*t);
+
+% Frequency upconvert to passband.
+xUp = real(x.*carrier);
+
+% Estimate spectrum.
+psdProbe = psd(specScope, xUp, specOpts);
+figure()
+plot(psdProbe)
+hold on;
+
+%% Channel Simulation
+% Create the passband interference by raising an adjacent channel tone to
+% the third power.
+Fint = Fc/3+50e3;
+interference = 0.7*cos(2*pi*Fint*t+pi/8).^3;
+
+% Calculate the total signal power for the given pulse shape. Account for
+% the average power of the baseband 16-QAM upsampled signal. For a
+% constellation that contains points with +/- 1 and +/- 3 amplitude levels,
+% the average power of a 16-QAM signal is 10 W. The upsampling operation
+% reduces this power by a factor of nSamps leading to a net power of
+% 10*log10(10/nSamps), or 0.97 dBW for nSamps = 8.
+avgPwrBaseBand16QAM = 10*log10(sum(abs(hMod.Constellation).^2)/(M*nSamps));
+sigPower = 10*log10(sum(hXmtFlt.Numerator.^2)) + avgPwrBaseBand16QAM;
+
+% Add white Gaussian noise based on the computed signal power.
+yUp = awgn(xUp, SNR, sigPower);
+N = xUp-yUp;
+
+% Add the adjacent channel interference to the signal.
+% yUpACI = yUp + interference;
+yUpACI = yUp;
+
+% Estimate spectrum of the noisy signal and compare it to the spectrum of
+% the original upconverted signal.
+psdProbe = psd(specScope, yUpACI, specOpts);
+hLine=plot(psdProbe);set(hLine,'Color',[1 0 0]);
+title('Tx Second Harmonics w/ AWGN @ Channel')
+legend('Signal w/o AWGN',...
+    'Signal w/ AWGN','Location','northeast')
+hold off;
+axis([1 4 -130 -50]);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filter Coefficient
+LMS_FIR = fir1(31,0.1);
+d  = filter(LMS_FIR,1,xUp)+N;  % Desired signal
+mu = 1/Fs;            % LMS step size. 
+ha = adaptfilt.lms(1024,mu); 
+
+% LMS Filtered Signal
+[y_Hat,err] = filter(ha,yUpACI,d);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Frequency Downconversion - w/o LMS Filter
+% Downconvert to baseband (Assumes perfect synchronization).
+yACI = yUpACI.*conj(carrier);
+
+% Estimate spectrum of the downconverted signal with adjacent channel
+% interference.
+psdProbe = psd(specScope, yACI, specOpts);
+figure(); plot(psdProbe);
+hold on;
+
+%% Frequency Downconversion - w/ LMS Filter
+
+yLMS = y_Hat.*conj(carrier);
+
+psdProbe = psd(specScope, yLMS, specOpts);
+hLine=plot(psdProbe);set(hLine,'Color',[0 1 0]);
+hold on;
+
+%% Baseband Demodulation
+
+% Matched Filtering
+% Make a copy of the transmitter filter and use it as matched filter.
+hRcvFlt = copy(hXmtFlt);
+
+% Filter the frequency downconverted signal.
+rcvSymACI = filter(hRcvFlt, yACI);
+
+% Estimate spectrum of the filtered signal and compare it to the spectrum
+% of the signal at the filter input.
+psdProbe = psd(specScope, rcvSymACI, specOpts);
+hLine=plot(psdProbe);set(hLine,'Color',[1 0 0]);
+title('Tx Second Harmonics w/ Filter @ Rx')
+legend('Input Signal',...
+    'Input Signal w/ LMS','Input Signal w/o LMS','Location','northeast')
+hold off;
+% axis([-1.5 1.5 -130 -50]);

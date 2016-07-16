@@ -1,0 +1,6 @@
+cluster0_Center:2276:1932
+cluster1_Center:2222:1884
+cluster2_Center:2292:1773
+cluster1
+cluster2
+cluster3

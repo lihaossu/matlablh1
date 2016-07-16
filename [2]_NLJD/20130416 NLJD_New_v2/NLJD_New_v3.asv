@@ -1,0 +1,195 @@
+clear all; close all; clc
+
+%% Initialize
+% Number of Measurement Data
+N = 50;
+% Number of Frame
+F = 1;
+% Deviation of Noise
+Noise1 = 50;
+Noise2 = 50;
+% Deviation of Real Data
+R = 1000;
+% Deviation of Interference Data
+Interference = 100;
+% Fuzzy Choice
+Fuzzy_Choice = 3;
+% Error Rate %
+E_Ratio = 30;
+
+% Dummy
+NLJD = zeros(F,1);
+
+for idx_F = 1:F
+    
+    % Ratio
+    N1 = (N*(100-E_Ratio)/100);
+    N2 = N - N1;
+    
+%     Real_Data = ceil(R*rand(1,2));
+    Real_Data = [700 300];
+    
+    if Real_Data(1) >= Real_Data(2)
+        % Device
+        NLJD(idx_F) = 0;
+        % Metal
+    else NLJD(idx_F) = 1;
+    end;
+    
+    Measurement_Data1 = [];
+    Measurement_Data2 = [];
+    
+    % Correct Data
+    for idx_First_N = 1:N1
+        Measurement_Data1(idx_First_N,:) = ceil(Noise1*randn(1,2)) + Real_Data;
+    end;
+    
+    % Incorrect Data #1
+    for idx_Second_N = 1:N2
+        Measurement_Data2(idx_Second_N,:) = ceil(Noise2*randn(1,2)) +...
+            [Real_Data(2) Real_Data(1)];
+    end;
+    
+    Measurement_Data = [Measurement_Data1; Measurement_Data2];
+    
+    Measurement_Data_Fuzzy = [Measurement_Data];
+    
+    [center,U,objFcn] = fcm_1(Measurement_Data_Fuzzy,Fuzzy_Choice);
+
+    figure
+    plot(objFcn)
+    title('Objective Function Values')
+    xlabel('Iteration Count')
+    ylabel('Objective Function Value')
+    
+    
+end;
+
+
+%% Fuzzy
+
+if Fuzzy_Choice == 2
+    
+    
+    maxU = max(U);
+    index1 = find(U(1,:) == maxU);
+    index2 = find(U(2,:) == maxU);
+    
+    aaa = [length(index1) length(index2)];
+    
+elseif Fuzzy_Choice == 3;
+    
+    
+    maxU = max(U);
+    index1 = find(U(1,:) == maxU);
+    index2 = find(U(2,:) == maxU);
+    index3 = find(U(3,:) == maxU);
+    
+    aaa = [length(index1) length(index2) length(index3)];
+    
+end;
+
+[value,position] = sort(aaa);
+
+% Fuzzy_Center = ceil((center(position(3),1:2) + center(position(2),1:2))/2)
+Fuzzy_Center = ceil(center(position(end),1:2))
+Averaging = ceil(sum(Measurement_Data)/N)
+
+%%
+% Fingerprinting Plot Properties
+% figPosition = 1;
+% axis([0 1000 0 1000]);
+% set(figPosition,'Position', [450, 550, 550, 450]);
+% hold on
+
+%%
+
+if Fuzzy_Choice == 3
+    
+    plot([0:1:1000],[0:1:1000],'b:','LineWidth',2);
+    grid on;
+    
+    hold on;
+    
+    % Cluster
+    line(Measurement_Data_Fuzzy(index1,1),Measurement_Data_Fuzzy(index1,2),'linestyle',':','marker', '^','color','r','MarkerSize',7,'LineWidth',2);
+    line(Measurement_Data_Fuzzy(index2,1),Measurement_Data_Fuzzy(index2,2),'linestyle',':','marker', 'o','color','b','MarkerSize',7,'LineWidth',2);
+    line(Measurement_Data_Fuzzy(index3,1),Measurement_Data_Fuzzy(index3,2),'linestyle',':','marker', 's','color','m','MarkerSize',7,'LineWidth',2);
+    hold on
+    
+    % Cluster Center
+    plot(center(1,1),center(1,2),'r^','markersize',7,'LineWidth',5)
+    plot(center(2,1),center(2,2),'bo','markersize',7,'LineWidth',5)
+    plot(center(3,1),center(3,2),'ms','markersize',7,'LineWidth',5)
+    
+    xlabel('Second Harmonics');
+    ylabel('Third Harmonics');
+    hold on
+    
+    plot(Real_Data(1),Real_Data(2),'kx','markersize',15,'LineWidth',5)
+    hold on
+    plot(Averaging(1),Averaging(2),'gd','markersize',10,'LineWidth',5)
+    hold on
+    plot(Fuzzy_Center(1),Fuzzy_Center(2),'c*','markersize',10,'LineWidth',5)
+    
+    legend('Conventional D/B','Cluster 1','Cluster 2','Cluster 3','Center of Cluster 1','Center of Cluster 2','Center of Cluster 3','Real Data','Averaging','Proposed')
+    
+    
+elseif Fuzzy_Choice == 2
+    
+    plot([0:1:1000],[0:1:1000],'b:','LineWidth',2);
+    grid on;
+    
+    hold on;
+    
+    % Cluster
+    line(Measurement_Data_Fuzzy(index1,1),Measurement_Data_Fuzzy(index1,2),'linestyle',':','marker', '^','color','r','MarkerSize',7,'LineWidth',2);
+    line(Measurement_Data_Fuzzy(index2,1),Measurement_Data_Fuzzy(index2,2),'linestyle',':','marker', 'o','color','b','MarkerSize',7,'LineWidth',2);
+    hold on
+    
+    % Cluster Center
+    plot(center(1,1),center(1,2),'r^','markersize',7,'LineWidth',5)
+    plot(center(2,1),center(2,2),'bo','markersize',7,'LineWidth',5)
+    
+    xlabel('Second Harmonics');
+    ylabel('Third Harmonics');
+    hold on
+    
+    plot(Real_Data(1),Real_Data(2),'kx','markersize',15,'LineWidth',5)
+    hold on
+    plot(Averaging(1),Averaging(2),'gd','markersize',10,'LineWidth',5)
+    hold on
+    plot(Fuzzy_Center(1),Fuzzy_Center(2),'c*','markersize',10,'LineWidth',5)
+    
+    legend('Conventional D/B','Cluster 1','Cluster 2','Center of Cluster 1','Center of Cluster 2','Real Data','Averaging','Proposed')
+    
+end;
+
+
+%% Measurement 2nd & 3rd
+figure()
+
+plot(1:N,Measurement_Data(:,1),'bs:','MarkerSize',10,'LineWidth',2)
+hold on;
+plot(1:N,Measurement_Data(:,2),'ro:','MarkerSize',10,'LineWidth',2)
+
+axis([1 N 0 1000])
+grid on
+legend('Second Harmonics','Third Harmonics');
+xlabel('Number of Measurements');
+ylabel('Decimal Amplitude of the Harmonics');
+
+%%
+figure()
+plot([1:1:1000],[1:1:1000],'r:','LineWidth',3)
+hold on
+line(Measurement_Data1(:,1),Measurement_Data1(:,2),'linestyle','none','marker', 's','color','r','MarkerSize',10,'LineWidth',2);
+hold on
+line(Measurement_Data2(:,1),Measurement_Data2(:,2),'linestyle','none','marker', 'o','color','b','MarkerSize',10,'LineWidth',2);
+grid on
+axis([0 1000 0 1000]);
+hold on
+
+xlabel('Second Harmonics');
+ylabel('Third Harmonics');
+legend('Conventional D/B','Cluster 1','Cluster 2')

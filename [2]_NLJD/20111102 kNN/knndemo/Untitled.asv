@@ -1,0 +1,4 @@
+a = 10*rand(1,100) + 5
+b = 10*rand(1,100)
+
+save('iris_test','a',)

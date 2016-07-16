@@ -1,0 +1,20 @@
+MLP
+
+  MATLAB Presentation
+
+There are two commands:
+
+mlpdoodle - The MLP editor
+mlpf - The MLP Frontend for doing a presentation
+
+Both scripts take a string argument: the name of the presentation.
+A mat file with that name is created or read for the presentation.
+
+While editing a presentation, it is 'saved' every time you switch pages.
+Do not edit a slide, then quit, the presentation would not be saved.
+
+  To learn more about MLP with MLP, type:
+
+>> mlpf demo/mlp
+
+% Use Spacebar to move to the next page.

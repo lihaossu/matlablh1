@@ -1,0 +1,14 @@
+x=0:0.1:2*pi;
+subplot(1,2,1);
+plot(x,sin(x),x,cos(x));
+xlabel('t=0 to 2\pi');
+ylabel('values of sin(x) and cos(x)');
+title('Function Plots of sin(x) and cos(x)');
+subplot(1,2,2);
+plot(x,sin(x),x,cos(x));
+xlabel('t=0 to 2\pi');
+ylabel('values of sin(x) and cos(x)');
+title('Function Plots of sin(x) and cos(x)');
+legend('sin(x)','cos(x)');
+text(pi/4,sin(pi/4),'\leftarrow sin(\pi/4)=0.707');
+text(5*pi/4,cos(5*pi/4),'cos(5\pi/4)=-0.707\rightarrow','HorizontalAlignment','right');

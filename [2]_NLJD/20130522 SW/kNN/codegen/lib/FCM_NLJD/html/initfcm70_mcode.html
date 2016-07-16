@@ -1,0 +1,20 @@
+<!-- saved from url=(0014)about:internet -->
+<pre class="code">
+<span class="srcline"><span class="lineno"><a href="34,1" id="srcline1"> 1</a></span><span class="line"><span class="keyword">function</span> <span class="var type1" id="S2T11U3">U</span> = initfcm(<span class="mxinfo" id="T3:U2"><span class="var type1" id="S3T3U6">cluster_n</span></span>, <span class="mxinfo" id="T3:U4"><span class="var type1" id="S4T3U7">data_n</span></span>)</span></span>
+<span class="srcline"><span class="lineno"><a href="34,2" id="srcline2"> 2</a></span><span class="line"><span class="comment">%INITFCM Generate initial fuzzy partition matrix for fuzzy c-means clustering.</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,3" id="srcline3"> 3</a></span><span class="line"><span class="comment">%   U = INITFCM(CLUSTER_N, DATA_N) randomly generates a fuzzy partition</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,4" id="srcline4"> 4</a></span><span class="line"><span class="comment">%   matrix U that is CLUSTER_N by DATA_N, where CLUSTER_N is number of</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,5" id="srcline5"> 5</a></span><span class="line"><span class="comment">%   clusters and DATA_N is number of data points. The summation of each</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,6" id="srcline6"> 6</a></span><span class="line"><span class="comment">%   column of the generated U is equal to unity, as required by fuzzy</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,7" id="srcline7"> 7</a></span><span class="line"><span class="comment">%   c-means clustering.</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,8" id="srcline8"> 8</a></span><span class="line"><span class="comment">%</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,9" id="srcline9"> 9</a></span><span class="line"><span class="comment">%       See also DISTFCM, FCMDEMO, IRISFCM, STEPFCM, FCM.</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,10" id="srcline10">10</a></span><span class="line"></span></span>
+<span class="srcline"><span class="lineno"><a href="34,11" id="srcline11">11</a></span><span class="line"><span class="comment">%   Roger Jang, 12-1-94.</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,12" id="srcline12">12</a></span><span class="line"><span class="comment">%   Copyright 1994-2002 The MathWorks, Inc. </span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,13" id="srcline13">13</a></span><span class="line"><span class="comment">%   $Revision: 1.11 $  $Date: 2002/04/14 22:21:58 $</span></span></span>
+<span class="srcline"><span class="lineno"><a href="34,14" id="srcline14">14</a></span><span class="line"></span></span>
+<span class="srcline"><span class="lineno"><a href="34,15" id="srcline15">15</a></span><span class="line"><span class="mxinfo" id="T11:U6"><span class="var type1" id="S2T11U10">U</span> = <span class="mxinfo" id="T11:U8">rand(<span class="var type1" id="S3T3U13">cluster_n</span>, <span class="var type1" id="S4T3U14">data_n</span>)</span></span>;</span></span>
+<span class="srcline"><span class="lineno"><a href="34,16" id="srcline16">16</a></span><span class="line"><span class="mxinfo" id="T24:U11"><span class="var type1" id="S6T24U17">col_sum</span> = <span class="mxinfo" id="T24:U13">sum(<span class="var type1" id="S2T11U20">U</span>)</span></span>;</span></span>
+<span class="srcline"><span class="lineno"><a href="34,17" id="srcline17">17</a></span><span class="line"><span class="mxinfo" id="T11:U15"><span class="var type1" id="S2T11U23">U</span> = <span class="mxinfo" id="T11:U17"><span class="var type1" id="S2T11U25">U</span>./<span class="mxinfo" id="T11:U19"><span class="var type1" id="S6T24U27">col_sum</span>(<span class="mxinfo" id="T27:U21">ones(<span class="mxinfo" id="T3:U22"><span class="var type1" id="S3T3U30">cluster_n</span></span>, 1)</span>, :)</span></span></span>;</span></span>
+</pre>

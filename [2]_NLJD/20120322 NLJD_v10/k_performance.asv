@@ -1,0 +1,41 @@
+clear all; close all; clc;
+
+%% Load File
+
+% Symmetric
+% load Result_Symmetric_10.mat
+% Result_10 = Prob_Fairvsknn;
+% load Result_Symmetric_20.mat
+% Result_20 = Prob_Fairvsknn;
+% load Result_Symmetric_30.mat
+% Result_30 = Prob_Fairvsknn;
+% load Result_Symmetric_40.mat
+% Result_40 = Prob_Fairvsknn;
+
+% Asymmetric
+load Result_Asymmetric_10.mat
+Result_10 = Prob_Fairvsknn;
+load Result_Symmetric_20.mat
+Result_20 = Prob_Fairvsknn;
+load Result_Symmetric_30.mat
+Result_30 = Prob_Fairvsknn;
+load Result_Symmetric_40.mat
+Result_40 = Prob_Fairvsknn;
+
+
+
+
+Data = [Result_10' Result_20' Result_30' ...
+    Result_40'];
+
+%% Figure
+
+Iter = 3:2:25;
+
+bar(Iter,Data)
+axis([2 26 0 50])
+xlabel('Number of k');
+ylabel('Error Probability (%)');
+grid on
+legend('Deviaion=10','Deviaion=20','Deviaion=30',...
+    'Deviaion=40');

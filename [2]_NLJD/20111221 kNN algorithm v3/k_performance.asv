@@ -1,0 +1,29 @@
+clear all; close all; clc;
+
+%% Load File
+
+load Training_20.mat
+load Training_40.mat
+load Training_60.mat
+load Training_80.mat
+load Training_100.mat
+
+k_3 = Training_20(1);
+k_5 = Training_20(2);
+k_7 = Training_20(3);
+k_9 = Training_20(4);
+k_11 = Training_20(5);
+k_13 = Training_20(6);
+k_15 = Training_20(7);
+
+Data = [k_3 k_5 k_7 k_9 k_11 k_13 k_15];
+
+%% Figure
+
+Iter = 3:2:13;
+
+bar(Iter,Data)
+axis([2 14 0 20])
+xlabel('Number of k');
+ylabel('Error Probability (%)');
+grid on

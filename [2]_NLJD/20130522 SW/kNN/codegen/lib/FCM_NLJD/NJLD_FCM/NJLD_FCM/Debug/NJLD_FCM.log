@@ -1,0 +1,61 @@
+﻿빌드 시작: 2013-06-18 오후 4:38:52
+     1>2 노드의 "D:\[3]_Simulation Code\[2]_NLJD\20130522 SW\kNN\codegen\lib\FCM_NLJD\NJLD_FCM\NJLD_FCM\NJLD_FCM.vcxproj" 프로젝트(build 대상)입니다.
+     1>InitializeBuildStatus:
+         "Debug\NJLD_FCM.unsuccessfulbuild"에 연결(touching)하고 있습니다.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt ..\..\FCM_NLJD.c
+         FCM_NLJD.c
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(18): error C2054: 'using' 다음에 '('가 필요합니다.
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(18): error C2061: 구문 오류 : 식별자 'using'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(19): error C2054: 'using' 다음에 '('가 필요합니다.
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(19): error C2061: 구문 오류 : 식별자 'using'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2061: 구문 오류 : 식별자 'asctime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2061: 구문 오류 : 식별자 'clock'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2061: 구문 오류 : 식별자 'ctime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(20): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2061: 구문 오류 : 식별자 'difftime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2061: 구문 오류 : 식별자 'gmtime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2061: 구문 오류 : 식별자 'localtime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(21): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2061: 구문 오류 : 식별자 'mktime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2061: 구문 오류 : 식별자 'strftime'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2059: 구문 오류 : ';'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2061: 구문 오류 : 식별자 'time'
+     1>c:\program files (x86)\microsoft visual studio 10.0\vc\include\ctime(22): error C2059: 구문 오류 : ';'
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(293): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2065: 'Samples' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2057: 상수 식이 필요합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(300): error C2466: 상수 크기 0의 배열을 할당할 수 없습니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(319): error C2065: 'Dsample' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(319): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(349): error C2065: 'Data' : 선언되지 않은 식별자입니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(349): warning C4047: '함수' : 'const real_T *'의 간접 참조 수준이 'int'과(와) 다릅니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(349): warning C4024: 'FCM_NLJD' : 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
+     1>d:\[3]_simulation code\[2]_nljd\20130522 sw\knn\codegen\lib\fcm_nljd\fcm_nljd.c(349): error C2198: 'FCM_NLJD' : 호출에 매개 변수가 너무 적습니다.
+     1>"D:\[3]_Simulation Code\[2]_NLJD\20130522 SW\kNN\codegen\lib\FCM_NLJD\NJLD_FCM\NJLD_FCM\NJLD_FCM.vcxproj" 프로젝트를 빌드했습니다(build 대상). - 실패
+
+빌드하지 못했습니다.
+
+경과 시간: 00:00:00.10

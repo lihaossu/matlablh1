@@ -1,0 +1,181 @@
+clear all; close all; clc;
+
+
+%% Load Training Data
+load Symmetric_40.mat
+
+%% Simulation Number
+knn_simulation_no = 100;
+frame = 10;
+%% Calculate
+A = ceil(sum(Class1(:,1:2))/length(Class1));
+B = ceil(sum(Class2(:,1:2))/length(Class2));
+C = ceil(A+B)/2;
+
+progressbar;
+% kNN Factor
+k = [3:2:11];
+
+Measure_Deviation = 1;
+Noise_Deviation = 40;
+
+for idx_k = 1:length(k)
+
+    for idx_frame = 1:frame
+        
+        Measured = 1000.*rand(knn_simulation_no,2);
+        Database = [Class1(:,1:2); Class2(:,1:2)];
+
+        % Fuzzy
+        [center,U,objFcn] = fcm(Database,2);
+        
+        maxU = max(U);
+        
+        index1 = find(U(1,:) == maxU);
+        % Find the data points with highest grade of membership in cluster 2
+        index2 = find(U(2,:) == maxU);
+        
+        fuzzy_cluster1 = Database(index1,1:2);
+        fuzzy_cluster2 = Database(index2,1:2);
+        
+%               
+%         for idx_fuzzy = 1:knn_simulation_no
+%             if U(1,length(Class1)+length(Class2)+idx_fuzzy) == maxU(length(Class1)+length(Class2)+idx_fuzzy)
+%                 decision_fuzzy(idx_fuzzy) = 0;
+%             elseif U(2,length(Class1)+length(Class2)+idx_fuzzy) == maxU(length(Class1)+length(Class2)+idx_fuzzy)
+%                 decision_fuzzy(idx_fuzzy) = 1;
+%             end;
+%         end;
+%         
+        for idx_simulation = 1:knn_simulation_no
+
+            % Initiate Measured Data Class
+            %             if Measured(idx_simulation,1) <= Measured(idx_simulation,2)
+            %                 Estimation(idx_simulation) = 0; % NLJD
+            %             elseif Measured(idx_simulation,1) > Measured(idx_simulation,2)
+            %                 Estimation(idx_simulation) = 1; % Metal
+            %             end;
+            
+%             Measured(idx_simulation,1:2) = C + 20.*randn(1,2);
+
+            % Faireness
+            xv11 = [C(2)-C(2); C(2)+C(2); C(2)-C(2); C(2)-C(2)];
+            yv11 = [C(1)-C(2); C(1)+C(2); C(1)+C(2); C(1)-C(2)];
+            rd = Measured(idx_simulation,1); nd = Measured(idx_simulation,2);
+            in11 = inpolygon(nd,rd,xv11,yv11);
+
+            if in11 == 0
+                Estimation(idx_simulation) = 0; % NLJD
+            elseif in11 == 1
+                Estimation(idx_simulation) = 1; % Metal
+            end;
+
+                     
+            % kNN
+            class(idx_simulation) = kNN(k(idx_k),Measured(idx_simulation,1:2),Class1(:,1:2),Class2(:,1:2));
+            decision_fuzzy(idx_simulation) = kNN(k(idx_k),Measured(idx_simulation,1:2),fuzzy_cluster1,fuzzy_cluster2);
+
+            % Faireness Decision Level
+            xv22 = [C(2)-C(2); C(2)+C(2); C(2)-C(2); C(2)-C(2)];
+            yv22 = [C(1)-C(2); C(1)+C(2); C(1)+C(2); C(1)-C(2)];
+            rd2 = Measured(idx_simulation,1); nd2 = Measured(idx_simulation,2);
+            in22 = inpolygon(nd2,rd2,xv22,yv22);
+
+            if in22 == 0
+                Estimation1(idx_simulation) = 0; % NLJD
+            elseif in22 == 1
+                Estimation1(idx_simulation) = 1; % Metal
+            end;
+
+
+            % Symmetric Decision Level
+            if Measured(idx_simulation,1) <= Measured(idx_simulation,2)
+                Estimation2(idx_simulation) = 0; % NLJD
+            elseif Measured(idx_simulation,1) > Measured(idx_simulation,2)
+                Estimation2(idx_simulation) = 1; % Metal
+            end;
+            
+            progress_count = idx_simulation/knn_simulation_no;
+            % Do something important
+            pause(0.01)
+            % Update figure
+            progressbar(((idx_k-1)*frame+((idx_frame-1)+progress_count))/(length(k)*frame));
+
+            Err_DL(idx_simulation) = xor(Estimation(idx_simulation),Estimation2(idx_simulation));
+            Err_kNN(idx_simulation) = xor(Estimation(idx_simulation),class(idx_simulation));
+            Err_FairvskNN(idx_simulation) = xor(Estimation1(idx_simulation),class(idx_simulation));
+            Err_FairvsDL(idx_simulation) = xor(Estimation1(idx_simulation),Estimation2(idx_simulation));
+            Err_DLvskNN(idx_simulation) = xor(Estimation2(idx_simulation),class(idx_simulation));
+
+                  
+            
+            Err_fuzzy_vs_AdvancedDL(idx_simulation) = xor(decision_fuzzy(idx_simulation),Estimation(idx_simulation));
+            Err_fuzzy_vs_Fair(idx_simulation) = xor(decision_fuzzy(idx_simulation),Estimation1(idx_simulation));
+            Err_fuzzy_vs_FairDL(idx_simulation) = xor(decision_fuzzy(idx_simulation),Estimation2(idx_simulation));
+            Err_fuzzy_vs_kNN(idx_simulation) = xor(decision_fuzzy(idx_simulation),class(idx_simulation));
+        
+            
+            
+        end;
+        
+        
+       
+        err_fuzzy_vs_AdvancedDL(idx_frame) = sum(Err_fuzzy_vs_AdvancedDL);
+        err_fuzzy_vs_Fair(idx_frame) = sum(Err_fuzzy_vs_Fair);
+        err_fuzzy_vs_FairDL(idx_frame) = sum(Err_fuzzy_vs_FairDL);
+        err_fuzzy_vs_kNN(idx_frame) = sum(Err_fuzzy_vs_kNN);
+        
+        
+        err_DL(idx_frame) = sum(Err_DL);
+        err_kNN(idx_frame) = sum(Err_kNN);
+        err_FairvskNN(idx_frame) = sum(Err_FairvskNN);
+        err_FairvsDL(idx_frame) = sum(Err_FairvsDL);
+        err_DLvskNN(idx_frame) = sum(Err_DLvskNN);
+
+    end;
+
+    Prob_DL(idx_k) = (sum(err_DL) / (knn_simulation_no * frame)) * 100;
+    Prob_knn(idx_k) = (sum(err_kNN) / (knn_simulation_no * frame)) * 100;
+    Prob_Fairvsknn(idx_k) = (sum(err_FairvskNN) / (knn_simulation_no * frame)) * 100;
+    Prob_FairvsDL(idx_k) = (sum(err_FairvsDL) / (knn_simulation_no * frame)) * 100;
+    Prob_DLvskNN(idx_k) = (sum(err_DLvskNN) / (knn_simulation_no * frame)) * 100;
+
+    Prob_fuzzy_vs_AdvancedDL(idx_k) = (sum(err_fuzzy_vs_AdvancedDL) / (knn_simulation_no * frame)) * 100;
+    Prob_fuzzy_vs_Fair(idx_k) = (sum(err_fuzzy_vs_Fair) / (knn_simulation_no * frame)) * 100;
+    Prob_fuzzy_vs_FairDL(idx_k) = (sum(err_fuzzy_vs_FairDL) / (knn_simulation_no * frame)) * 100;
+    Prob_fuzzy_vs_kNN(idx_k) = (sum(err_fuzzy_vs_kNN) / (knn_simulation_no * frame)) * 100;
+end;
+
+bar(k,Prob_DLvskNN);
+%
+% Prob_DL
+% Prob_FairvsDL
+% Prob_knn
+% Prob_Fairvsknn
+% Prob_DLvskNN
+% bar(k,Prob_fuzzy_vs_FairDL);
+% xlabel('k');
+% ylabel('Error');
+% % save Result_Asymmetric_40.mat Prob_DL Prob_FairvsDL Prob_knn Prob_Fairvsknn Prob_DLvskNN
+% 
+% 
+
+        %       % Find the data points with highest grade of membership in cluster 1
+      index1 = find(U(1,:) == maxU);
+      % Find the data points with highest grade of membership in cluster 2
+      index2 = find(U(2,:) == maxU);
+%       
+      plot(Database(:,1), Database(:,2),'o');
+      hold on;
+      line(Database(index1,1),Database(index1,2),'marker','*','color','g');
+      line(Database(index2,1),Database(index2,2),'marker','*','color','r');
+      % Plot the cluster centers
+      plot([center([1 2],1)],[center([1 2],2)],'*','color','k')
+      hold off;
+      grid on;
+
+
+% axis([350 700 350 700])
+% axis([150 550 150 1000])
+
+grid on

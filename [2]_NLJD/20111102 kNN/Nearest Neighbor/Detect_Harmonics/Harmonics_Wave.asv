@@ -1,0 +1,30 @@
+clear all;
+close all;
+clc
+
+% t=[0:0.01:8];
+% T=8;
+% fs=1/T;
+T = 10E3;
+fs = 1/T;
+t = 0:1:.296;
+
+w0=2*pi*fs;
+A=2/pi;
+y0=zeros(1,length(t));
+y1=A/1*cos(1*w0*t);
+y2=A/2*cos(2*w0*t);
+y3=A/3*cos(3*w0*t);
+y=y0+y1+y2+y3;
+plot(t,y,t,y0,t,y1,t,y2,t,y3);
+
+% h = spectrum.welch('hamming',64);
+% 
+% hpsd = psd(h,y,'fs',fs);
+% Pxx = hpsd.Data;
+% W = hpsd.Frequencies;
+% Hpsd = dspdata.psd(Pxx,W,'fs',fs);
+% plot(Hpsd);
+% grid on;
+% legend('0.5 ns');
+% axis([0 10 -140 -80]);
